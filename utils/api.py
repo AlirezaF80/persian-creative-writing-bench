@@ -83,7 +83,7 @@ class APIClient:
                 if model == 'o3':
                     # o3 has special reqs via the openai api
                     if "max_tokens" in payload:
-                    del payload['max_tokens']
+                        del payload['max_tokens']
                     payload['max_completion_tokens'] = max_tokens
                     payload['temperature'] = 1
                 response = requests.post(
