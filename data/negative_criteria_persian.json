@@ -1,11 +1,13 @@
 {
-    "Unearned Transformations": "",
-    "Incongruent Ending Positivity": "",
-    "Overwrought": "",
-    "Purple Prose": "",
-    "Amateurish": "",
-    "Unsurprising or Uncreative": "",
-    "Tell-Don't-Show": "",
-    "Weak Dialogue": "",
-    "Meandering": ""
+    "Meandering": "The plot is unfocused, loses its way, or contains irrelevant scenes and descriptions that do not advance the story.",
+    "Weak Dialogue": "Dialogue that feels unnatural, stilted, or generic. Characters may all sound the same or serve only as exposition dumps.",
+    "Tell-Don't-Show": "The tendency to state facts or emotions directly to the reader (e.g., 'He was angry') instead of conveying them through action, dialogue, and sensory details.",
+    "Unsurprising or Uncreative": "The story relies on overused tropes, predictable plot points, and clichés, failing to offer any fresh ideas or originality.",
+    "Amateurish": "The presence of elements that suggest a lack of writing skill, such as poor grammar, inconsistent tense, simplistic vocabulary, or a generally unpolished feel.",
+    "Purple Prose": "Writing that is overly ornate, flowery, and uses extravagant language to the point of being distracting, pretentious, or difficult to read.",
+    "Overwrought": "The piece is excessively dramatic or emotional in a way that feels forced, artificial, and unearned, leading to melodrama.",
+    "Incongruent Ending Positivity": "A conclusion that feels artificially positive or happy, ignoring the established conflicts and struggles of the narrative without proper resolution.",
+    "Unearned Transformations": "When a character undergoes a significant change in personality or belief that is sudden, unbelievable, and not supported by the events of the story.",
+    "Translated Feel": "The text reads as if it has been poorly translated from another language, with awkward phrasing, unnatural sentence structures, or cultural references that do not translate well.",
+    "Cultural Incongruity": "The story contains cultural elements that feel out of place, inconsistent with the setting, or do not align with the Iranian-Persian cultural norms and values it purports to represent."
 }
