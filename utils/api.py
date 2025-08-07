@@ -68,9 +68,12 @@ class APIClient:
                 payload = {
                     "model": model,
                     "messages": messages,
-                    "temperature": temperature,
-                    "max_tokens": max_tokens                    
+                    "temperature": temperature
                 }
+                # Only include max_tokens when explicitly set by caller.
+                # Many providers accept 'max_tokens', but some (e.g., o3) need 'max_completion_tokens'.
+                if max_tokens is not None:
+                    payload["max_tokens"] = max_tokens
                 if min_p != None and model != 'o3':
                     # Only use min_p for the test model (not judge).
                     # If your test model doesn't support min_p, you may need to
@@ -79,6 +82,7 @@ class APIClient:
                     payload['min_p'] = min_p
                 if model == 'o3':
                     # o3 has special reqs via the openai api
+                    if "max_tokens" in payload:
                     del payload['max_tokens']
                     payload['max_completion_tokens'] = max_tokens
                     payload['temperature'] = 1

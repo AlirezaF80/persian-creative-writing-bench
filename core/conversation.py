@@ -16,7 +16,9 @@ class CreativeWritingTask:
         seed_modifiers: List[str],
         iteration_index: int,
         test_model: str,
-        judge_model: str
+        judge_model: str,
+        test_max_tokens: Optional[int] = None,
+        judge_max_tokens: Optional[int] = None
     ):
         self.prompt_id = prompt_id
         self.base_prompt = base_prompt
@@ -24,6 +26,8 @@ class CreativeWritingTask:
         self.iteration_index = iteration_index
         self.test_model = test_model
         self.judge_model = judge_model
+        self.test_max_tokens = test_max_tokens
+        self.judge_max_tokens = judge_max_tokens
 
         self.status = "initialized"
         self.start_time = None
@@ -59,7 +63,14 @@ class CreativeWritingTask:
             max_attempts = 3
             for attempt in range(1, max_attempts + 1):
                 try:
-                    response = test_api.generate(self.test_model, final_prompt, temperature=0.7, max_tokens=4000, min_p=0.1, include_seed=False)
+                    response = test_api.generate(
+                        self.test_model,
+                        final_prompt,
+                        temperature=0.7,
+                        max_tokens=self.test_max_tokens,
+                        min_p=0.1,
+                        include_seed=False
+                    )
                     
                     # Check if response is too short
                     if len(response.strip()) < 500:
@@ -156,7 +167,14 @@ class CreativeWritingTask:
             )
 
             try:
-                judge_resp = judge_api.generate(self.judge_model, final_judge_prompt, temperature=0.0, max_tokens=1000, include_seed=True, min_p=None)
+                judge_resp = judge_api.generate(
+                    self.judge_model,
+                    final_judge_prompt,
+                    temperature=0.0,
+                    max_tokens=self.judge_max_tokens,
+                    include_seed=True,
+                    min_p=None
+                )
                 scores_dict = parse_judge_scores_creative(judge_resp)
                 data_block["judge_scores"] = scores_dict
                 data_block["raw_judge_text"] = judge_resp
@@ -183,6 +201,8 @@ class CreativeWritingTask:
             "iteration_index": self.iteration_index,
             "test_model": self.test_model,
             "judge_model": self.judge_model,
+            "test_max_tokens": self.test_max_tokens,
+            "judge_max_tokens": self.judge_max_tokens,
             "status": self.status,
             "start_time": self.start_time,
             "end_time": self.end_time,
@@ -205,4 +225,7 @@ class CreativeWritingTask:
         obj.end_time = data.get("end_time")
         obj.error = data.get("error")
         obj.results_by_modifier = data.get("results_by_modifier", {})
+        # Backward compatibility: old runs won't have these fields
+        obj.test_max_tokens = data.get("test_max_tokens")
+        obj.judge_max_tokens = data.get("judge_max_tokens")
         return obj

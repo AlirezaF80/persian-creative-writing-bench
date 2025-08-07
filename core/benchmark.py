@@ -184,7 +184,9 @@ def run_eq_bench_creative(
     redo_judging: bool = False,
     save_interval: int = 2,
     iterations: int = 1,
-    run_elo: bool = True
+    run_elo: bool = True,
+    test_max_tokens: Optional[int] = None,
+    judge_max_tokens: Optional[int] = None
 ) -> str:
     """
     Main function to run the creative writing benchmark.
@@ -322,7 +324,9 @@ def run_eq_bench_creative(
                     seed_modifiers=[iteration_seed],
                     iteration_index=i,
                     test_model=test_model,
-                    judge_model=judge_model
+                    judge_model=judge_model,
+                    test_max_tokens=test_max_tokens,
+                    judge_max_tokens=judge_max_tokens,
                 )
                 tasks_to_run.append(new_task)
 

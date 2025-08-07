@@ -114,6 +114,9 @@ def main():
     parser.add_argument("--iterations", type=int, default=1, help="How many iteration passes to run (one seed per iteration).")
     # --- New Argument ---
     parser.add_argument("--no-elo", action="store_true", default=False, help="Disable the ELO analysis step.")
+    # --- Max tokens controls ---
+    parser.add_argument("--test-max-tokens", type=int, help="Max tokens for test model generations. Suggested: 4000")
+    parser.add_argument("--judge-max-tokens", type=int, help="Max tokens for judge model scoring. Suggested: 1000")
 
     args = parser.parse_args()
     setup_logging(get_verbosity(args.verbosity))
@@ -137,7 +140,9 @@ def main():
         redo_judging=args.redo_judging,
         save_interval=args.save_interval,
         iterations=args.iterations,
-        run_elo=run_elo_flag # Pass the flag
+        run_elo=run_elo_flag, # Pass the flag
+        test_max_tokens=args.test_max_tokens,
+        judge_max_tokens=args.judge_max_tokens
     )
 
     logging.info(f"Creative writing benchmark completed. Run key: {run_key}")
