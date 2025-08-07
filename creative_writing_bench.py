@@ -121,7 +121,7 @@ def main():
     # --- Sampling controls ---
     parser.add_argument("--test-temperature", type=float, default=0.7, help="Temperature for test model generations. Default: 0.7")
     parser.add_argument("--judge-temperature", type=float, default=0.0, help="Temperature for judge model scoring. Default: 0.0")
-    parser.add_argument("--test-min-p", type=float, default=0.1, help="min_p for test model generations. Default: 0.1")
+    parser.add_argument("--test-min-p", type=float, default=None, help="min_p for test model generations. Suggested: 0.1")
     parser.add_argument("--judge-min-p", type=float, default=None, help="min_p for judge model scoring. Omitted unless specified.")
 
     args = parser.parse_args()
