@@ -191,7 +191,6 @@ class CreativeWritingTask:
                 creative_writing_criteria=creative_criteria_str
             )
             
-            print(final_judge_prompt)
 
             try:
                 judge_resp = judge_api.generate(
