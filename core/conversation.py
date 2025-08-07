@@ -135,8 +135,8 @@ class CreativeWritingTask:
                 }
             })
 
-    def judge(self, api_clients, judge_prompt: str, creative_writing_criteria: List[str],
-          negative_criteria: List[str], runs_file=None, run_key=None):
+    def judge(self, api_clients, judge_prompt: str, creative_writing_criteria: Dict[str, str],
+          negative_criteria: Dict[str, str], runs_file=None, run_key=None):
         """
         For each seed modifier, if there's a model_response and no generation failures,
         pass it to the judge model for scoring.
@@ -165,13 +165,29 @@ class CreativeWritingTask:
                 data_block["judge_scores"] = {}
                 data_block["raw_judge_text"] = "[Skipping - empty generation]"
                 continue
+            
+            # Build criterias
+            creative_writing_criteria = list(creative_writing_criteria.keys())
+            negative_criteria = list(negative_criteria.keys())
+            all_criteria_desc_exist = all(v for v in creative_writing_criteria.values() if v is not None and v.strip())
+            creative_criteria_str = "\n".join(["- " + c for c in creative_writing_criteria])
+            if all_criteria_desc_exist:
+                creative_criteria_str = "\n".join(
+                    [f"- {c}: {creative_writing_criteria[c]}" for c in creative_writing_criteria]
+                )
+            all_neg_criteria_desc_exist = all(v for v in negative_criteria.values() if v is not None and v.strip())
+            negative_criteria_str = ", ".join(negative_criteria)
+            if all_neg_criteria_desc_exist:
+                negative_criteria_str = ", ".join(
+                    [f"- {c}: {negative_criteria[c]}" for c in negative_criteria]
+                )
 
             # Build final
             final_judge_prompt = judge_prompt.format(
                 writing_prompt=self.base_prompt,
                 test_model_response=model_text,
-                creative_writing_criteria="\n".join(["- " + c for c in creative_writing_criteria]),
-                lower_is_better_criteria=", ".join(negative_criteria)
+                creative_writing_criteria=creative_criteria_str,
+                lower_is_better_criteria=negative_criteria_str,
             )
 
             try:

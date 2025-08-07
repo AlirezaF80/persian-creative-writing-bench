@@ -226,14 +226,32 @@ def run_eq_bench_creative(
 
     # --- Load criteria and prompts ---
     creative_writing_criteria = []
+    creative_writing_criteria_with_desc = {}
     if os.path.exists(creative_criteria_file):
-        with open(creative_criteria_file, 'r', encoding='utf-8') as f:
-            creative_writing_criteria = [line.strip() for line in f if line.strip()]
+        if creative_criteria_file.endswith('.json'):
+            # Load from JSON file
+            creative_writing_criteria_with_desc = load_json_file(creative_criteria_file)
+            creative_writing_criteria = list(creative_writing_criteria_with_desc.keys())
+        else:
+            # Load from text file (backward compatibility)
+            with open(creative_criteria_file, 'r', encoding='utf-8') as f:
+                creative_writing_criteria = [line.strip() for line in f if line.strip()]
+                # For text files, we don't have descriptions
+                creative_writing_criteria_with_desc = {c: "" for c in creative_writing_criteria}
 
     negative_criteria = []
+    negative_criteria_with_desc = {}
     if os.path.exists(negative_criteria_file):
-        with open(negative_criteria_file, 'r', encoding='utf-8') as f:
-            negative_criteria = [line.strip() for line in f if line.strip()]
+        if negative_criteria_file.endswith('.json'):
+            # Load from JSON file
+            negative_criteria_with_desc = load_json_file(negative_criteria_file)
+            negative_criteria = list(negative_criteria_with_desc.keys())
+        else:
+            # Load from text file (backward compatibility)
+            with open(negative_criteria_file, 'r', encoding='utf-8') as f:
+                negative_criteria = [line.strip() for line in f if line.strip()]
+                # For text files, we don't have descriptions
+                negative_criteria_with_desc = {c: "" for c in negative_criteria}
 
     if not os.path.exists(judge_prompt_file):
         raise FileNotFoundError(f"Judge prompt file not found: {judge_prompt_file}")
@@ -420,8 +438,8 @@ def run_eq_bench_creative(
                     task_obj.judge, # This method should update task_obj.status and save results
                     api_clients,
                     judge_prompt_template,
-                    creative_writing_criteria,
-                    negative_criteria,
+                    creative_writing_criteria_with_desc,
+                    negative_criteria_with_desc,
                     runs_file,
                     run_key
                 ): task_obj for task_obj in tasks_needing_judging
