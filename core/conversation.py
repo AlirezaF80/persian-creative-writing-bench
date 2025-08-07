@@ -167,8 +167,6 @@ class CreativeWritingTask:
                 continue
             
             # Build criterias
-            creative_writing_criteria = list(creative_writing_criteria.keys())
-            negative_criteria = list(negative_criteria.keys())
             all_criteria_desc_exist = all(v for v in creative_writing_criteria.values() if v is not None and v.strip())
             creative_criteria_str = "\n".join(["- " + c for c in creative_writing_criteria])
             if all_criteria_desc_exist:
