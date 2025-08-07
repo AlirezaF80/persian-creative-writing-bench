@@ -34,6 +34,9 @@ Scoring notes:
 
 - You are to write a comprehensive analysis of the piece, then give your scores.
 
+- For these criteria, higher is better:
+{higher_is_better_criteria}
+
 - For these criteria, lower is better:
 {lower_is_better_criteria}
 

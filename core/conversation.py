@@ -167,26 +167,31 @@ class CreativeWritingTask:
                 continue
             
             # Build criterias
-            all_criteria_desc_exist = all(v for v in creative_writing_criteria.values() if v is not None and v.strip())
-            creative_criteria_str = "\n".join(["- " + c for c in creative_writing_criteria])
-            if all_criteria_desc_exist:
-                creative_criteria_str = "\n".join(
+            higher_criteria_str = "\n".join(["- " + c for c in creative_writing_criteria])
+            negative_criteria_str = "\n".join(["- " + c for c in negative_criteria])
+            all_higher_criteria_desc_exist = all(v for v in creative_writing_criteria.values() if v is not None and v.strip())
+            all_neg_criteria_desc_exist = all(v for v in negative_criteria.values() if v is not None and v.strip())
+            if all_higher_criteria_desc_exist and all_neg_criteria_desc_exist:
+                higher_criteria_str = "\n".join(
                     [f"- {c}: {creative_writing_criteria[c]}" for c in creative_writing_criteria]
                 )
-            all_neg_criteria_desc_exist = all(v for v in negative_criteria.values() if v is not None and v.strip())
-            negative_criteria_str = ", ".join(negative_criteria)
-            if all_neg_criteria_desc_exist:
-                negative_criteria_str = ", ".join(
+                negative_criteria_str = "\n".join(
                     [f"- {c}: {negative_criteria[c]}" for c in negative_criteria]
                 )
+            creative_criteria_str = "\n".join(
+                [f"- {c}" for c in creative_writing_criteria] + [f"- {c}" for c in negative_criteria]
+            )
 
             # Build final
             final_judge_prompt = judge_prompt.format(
                 writing_prompt=self.base_prompt,
                 test_model_response=model_text,
-                creative_writing_criteria=creative_criteria_str,
+                higher_is_better_criteria=higher_criteria_str,
                 lower_is_better_criteria=negative_criteria_str,
+                creative_writing_criteria=creative_criteria_str
             )
+            
+            print(final_judge_prompt)
 
             try:
                 judge_resp = judge_api.generate(
