@@ -186,7 +186,11 @@ def run_eq_bench_creative(
     iterations: int = 1,
     run_elo: bool = True,
     test_max_tokens: Optional[int] = None,
-    judge_max_tokens: Optional[int] = None
+    judge_max_tokens: Optional[int] = None,
+    test_temperature: float = 0.7,
+    judge_temperature: float = 0.0,
+    test_min_p: Optional[float] = 0.1,
+    judge_min_p: Optional[float] = None
 ) -> str:
     """
     Main function to run the creative writing benchmark.
@@ -327,6 +331,10 @@ def run_eq_bench_creative(
                     judge_model=judge_model,
                     test_max_tokens=test_max_tokens,
                     judge_max_tokens=judge_max_tokens,
+                    test_temperature=test_temperature,
+                    judge_temperature=judge_temperature,
+                    test_min_p=test_min_p,
+                    judge_min_p=judge_min_p
                 )
                 tasks_to_run.append(new_task)
 

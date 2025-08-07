@@ -18,7 +18,11 @@ class CreativeWritingTask:
         test_model: str,
         judge_model: str,
         test_max_tokens: Optional[int] = None,
-        judge_max_tokens: Optional[int] = None
+        judge_max_tokens: Optional[int] = None,
+        test_temperature: float = 0.7,
+        judge_temperature: float = 0.0,
+        test_min_p: Optional[float] = 0.1,
+        judge_min_p: Optional[float] = None
     ):
         self.prompt_id = prompt_id
         self.base_prompt = base_prompt
@@ -28,6 +32,10 @@ class CreativeWritingTask:
         self.judge_model = judge_model
         self.test_max_tokens = test_max_tokens
         self.judge_max_tokens = judge_max_tokens
+        self.test_temperature = test_temperature
+        self.judge_temperature = judge_temperature
+        self.test_min_p = test_min_p
+        self.judge_min_p = judge_min_p
 
         self.status = "initialized"
         self.start_time = None
@@ -66,9 +74,9 @@ class CreativeWritingTask:
                     response = test_api.generate(
                         self.test_model,
                         final_prompt,
-                        temperature=0.7,
                         max_tokens=self.test_max_tokens,
-                        min_p=0.1,
+                        temperature=self.test_temperature,
+                        min_p=self.test_min_p,
                         include_seed=False
                     )
                     
@@ -170,10 +178,10 @@ class CreativeWritingTask:
                 judge_resp = judge_api.generate(
                     self.judge_model,
                     final_judge_prompt,
-                    temperature=0.0,
                     max_tokens=self.judge_max_tokens,
+                    temperature=self.judge_temperature,
                     include_seed=True,
-                    min_p=None
+                    min_p=self.judge_min_p
                 )
                 scores_dict = parse_judge_scores_creative(judge_resp)
                 data_block["judge_scores"] = scores_dict
@@ -203,6 +211,10 @@ class CreativeWritingTask:
             "judge_model": self.judge_model,
             "test_max_tokens": self.test_max_tokens,
             "judge_max_tokens": self.judge_max_tokens,
+            "test_temperature": self.test_temperature,
+            "judge_temperature": self.judge_temperature,
+            "test_min_p": self.test_min_p,
+            "judge_min_p": self.judge_min_p,
             "status": self.status,
             "start_time": self.start_time,
             "end_time": self.end_time,
@@ -228,4 +240,9 @@ class CreativeWritingTask:
         # Backward compatibility: old runs won't have these fields
         obj.test_max_tokens = data.get("test_max_tokens")
         obj.judge_max_tokens = data.get("judge_max_tokens")
+        # Backward compatibility defaults
+        obj.test_temperature = data.get("test_temperature", 0.7)
+        obj.judge_temperature = data.get("judge_temperature", 0.0)
+        obj.test_min_p = data.get("test_min_p", 0.1)
+        obj.judge_min_p = data.get("judge_min_p")
         return obj
